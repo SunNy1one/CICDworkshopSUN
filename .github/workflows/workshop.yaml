@@ -10,10 +10,10 @@ jobs:
     name: scan
     runs-on: ubuntu-latest
     steps:
-      -name: Checkout code
-       uses: actions/checkout@v4
-       repository: 'CICDWorkshopSun'
-      -name: Run Trivy vulnerability scanner
-       uses: aquasecurity/trivy-action@master
-       with: 
-        format: 'table'
+      - name: checkout code
+        uses: actions/checkout@v4
+        
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with: 
+         format: 'table'
