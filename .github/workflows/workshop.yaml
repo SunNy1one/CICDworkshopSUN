@@ -28,7 +28,8 @@ jobs:
     
     payload: |
         {
-          "blocks": [
+          "blocks": 
+          [
             {
               "type": "context",
               "elements": [
@@ -45,7 +46,8 @@ jobs:
             },
             {
               "type": "section",
-              "fields": [
+              "fields": 
+              [
                 {
                   "type": "mrkdwn",
                   "text": "*Re:*\nComputer (laptop)"
@@ -74,4 +76,4 @@ jobs:
           ]
         }
     env:
-      SLACK_WEBHOOK_URL: ${{ https://app.slack.com/client/T06U5JGHA5B/C06UB2DHPC4 }}
+      SLACK_WEBHOOK_URL: ${{https://app.slack.com/client/T06U5JGHA5B/C06UB2DHPC4}}
