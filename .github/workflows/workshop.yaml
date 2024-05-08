@@ -18,3 +18,18 @@ jobs:
         scan-type: 'fs'
         scan-ref: '.'
         trivy-config: trivy.yaml
+  Send:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Send custom JSON data to Slack workflow
+    id: slack
+    uses: slackapi/slack-github-action@v1.26.0
+    with:
+    
+    payload: |
+      {
+        "key": "value",
+        "foo": "bar"
+      }
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
