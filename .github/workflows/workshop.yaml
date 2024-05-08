@@ -23,56 +23,6 @@ jobs:
     steps:
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
-        with:
-      
-      payload: |
-          {
-            "blocks": 
-            [
-              {
-                "type": "context",
-                "elements": [
-                  {
-                    "type": "image",
-                    "image_url": "https://img2.baidu.com/it/u=3183561743,1887230437&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1715274000&t=2c7a77e6c4b8da90a2ba9f3b2f1a82d6",
-                    "alt_text": "Sun Jiahao"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Sun Jiahao*"
-                  }
-                ]
-              },
-              {
-                "type": "section",
-                "fields": 
-                [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Re:*\nComputer (laptop)"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Event:*\nSubmitted Aut 10"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Actions URL:*\n*<fakeLink.toEmployeeProfile.com|Build and Push>*"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Commit:*\n<fakeLink.toEmployeeProfile.com|CommitNo>"
-                  }
-                ]
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "*Scan failed - Sun Jiahao*\nFailed trivy scan, see uploaded report"
-                }
-              }
-            ]
-          }
       env:
         SLACK_WEBHOOK_URL: ${{https://app.slack.com/client/T06U5JGHA5B/C06UB2DHPC4}}
+        SLACK_MESSAGE: ${{fuck u}}
