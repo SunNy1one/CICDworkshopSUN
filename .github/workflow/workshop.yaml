@@ -1,0 +1,17 @@
+name: CICD-workshop-actions
+on:
+  push:
+    branches:
+      -'releases/v[0-9]+.[0-9]+'
+jobs:
+  build:
+    name: scan
+    runs-on: ubuntu-latest
+    steps:
+      -name: Checkout code
+       uses: actions/checkout@v4
+       repository: 'CICDWorkshopSun'
+      -name: Run Trivy vulnerability scanner
+       uses: aquasecurity/trivy-action@master
+       with: 
+        format: 'table'
