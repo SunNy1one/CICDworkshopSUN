@@ -24,5 +24,5 @@ jobs:
     - name: Slack Notification
       uses: rtCamp/action-slack-notify@v2
       env:
-        SLACK_WEBHOOK_URL: ${{ https://app.slack.com/client/T06U5JGHA5B/C06UB2DHPC4 }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_MESSAGE: ${{ fuck u }}
