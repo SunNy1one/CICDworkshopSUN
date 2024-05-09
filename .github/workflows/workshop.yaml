@@ -17,20 +17,12 @@ jobs:
       - name: Run Trivy vulnerability scanner in fs mode
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
+          scan-type: 'repo'
           format: 'table'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL'
-          trivy-config: trivy.yaml
           output: trivy.txt
-      
-      - name: Upload scan results
-        uses: actions/upload-artifact@v3
-        with:
-          name: trivy-scan-results
-          path: trivy.txt
-  
   Send:
     runs-on: ubuntu-20.04
     steps:
