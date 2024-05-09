@@ -23,6 +23,11 @@ jobs:
           vuln-type: 'os,library'
           severity: 'HIGH'
           output: trivy.txt
+  Post:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Find High in Trivy
         id: search_file
@@ -33,7 +38,12 @@ jobs:
             echo "::set-output name=Trivy_Status::Success"
           fi
      
-      # notification to slack
+  Send:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Slack Notification When trivy failure
         if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
         uses: rtCamp/action-slack-notify@v2
@@ -41,7 +51,12 @@ jobs:
           SLACK_TITLE: 'Scan failed - Sun Jiahao'
           SLACK_MESSAGE: 'failed trivy scan, see uploaded report'
           SLACK_COLOR: 'failure'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}  
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  Upload:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3 
 
       - name: Slack Upload Trivy
         if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
