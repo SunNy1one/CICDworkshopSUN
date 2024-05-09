@@ -23,6 +23,13 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL'
           output: ./trivy.txt
+      
+      - name: Upload scan results
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-scan-results
+          path: ./trivy.txt
+
   Send:
     runs-on: ubuntu-20.04
     steps:
@@ -39,6 +46,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: [Scan, Send]
     steps:
+
+      - name: Download scan results
+        uses: actions/download-artifact@v3
+        with:
+          name: trivy-scan-results
+          
       - name: Upload scan results to Slack
         uses: MeilCli/slack-upload-file@v4
         with:
