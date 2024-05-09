@@ -23,26 +23,36 @@ jobs:
           vuln-type: 'os,library'
           severity: 'HIGH'
           output: trivy.txt
-
+  Findtxt:
+    needs: Scan
+    runs-on: ubuntu-20.04
+      steps:
       - name: Find High in Trivy
         id: search_file
         run: |
           if grep -q "HIGH" trivy.txt; then
-            echo "Trivy_Status=Failed">> $GITHUB_STATE
+            echo "::set-output name=Trivy_Status::Failed"
           else
-            echo "Trivy_Status=Success">> $GITHUB_OUTPUT
+            echo "::set-output name=Trivy_Status::Success"
           fi
      
-      # notification to slack
+  SendFMsg:
+    needs: Findtxt
+    runs-on: ubuntu-20.04
+      steps:
       - name: Slack Notification When trivy failure
         if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_TITLE: 'Scan failed - Sun Jiahao'
-          SLACK_MESSAGE: 'failed trivy scan, see uploaded report'
+          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
           SLACK_COLOR: 'failure'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}  
 
+  Sendtxt:
+    needs: SendFMsg
+    runs-on: ubuntu-20.04
+    steps:
       - name: Slack Upload Trivy
         if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
         uses: MeilCli/slack-upload-file@v4
