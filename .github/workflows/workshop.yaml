@@ -69,6 +69,7 @@ jobs:
         uses: sigstore/cosign-installer@v2.1.0
 
       - name: Sign image with a key
+        if: success() && steps.search_file.outputs.Trivy_Status == 'Success'
         run: |
           images=""
           for tag in ${TAGS}; do
