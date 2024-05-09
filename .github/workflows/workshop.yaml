@@ -16,7 +16,10 @@ jobs:
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: 'fs'
-        scan-ref: '.'
+        format: 'table'
+        ignore-unfixed: ture
+        vuln-type: 'os-library'
+        severity: 'HIGH'
         trivy-config: trivy.yaml
         output: trivy.txt
   Send:
@@ -37,8 +40,7 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'trivy.txt'
-          title: 'title of file'
-          initial_comment: 'post by SunJiahao'
+          initial_comment: 'post by Sun Jiahao'
   docker:
     runs-on: ubuntu-latest
     steps:
