@@ -53,5 +53,5 @@ jobs:
           file_path: 'trivy.txt'
           initial_comment: 'Scan report by Sun Jiahao'
       
-      -name: 
+ 
 
