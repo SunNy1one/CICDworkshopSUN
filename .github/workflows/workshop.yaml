@@ -53,9 +53,9 @@ jobs:
           name: trivy-scan-results
 
       - name: Upload scan results to Slack
-        uses: MeilCli/slack-upload-file@v4
+        uses: slackapi/slack-github-action@v1.23.0
         with:
-          slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: './trivy.txt'
-          initial_comment: 'post by Sun Jiahao'
+          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          slack-channel: ${{ secrets.SLACK_CHANNEL_ID }}
+          slack-text: "Scan results:"
+          slack-file: ./trivy.txt
