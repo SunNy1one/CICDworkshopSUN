@@ -53,6 +53,7 @@ jobs:
           file_path: 'trivy.txt'
           initial_comment: 'Scan report by Sun Jiahao.'
       
+      
       - name: Build and Push Docker Image
         if: success() && steps.search_file.outputs.Trivy_Status == 'Success'
         env:
