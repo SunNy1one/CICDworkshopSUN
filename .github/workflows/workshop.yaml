@@ -26,9 +26,6 @@ jobs:
   Post:
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Find High in Trivy
         id: search_file
         run: |
@@ -41,9 +38,6 @@ jobs:
   Send:
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Slack Notification When trivy failure
         if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
         uses: rtCamp/action-slack-notify@v2
@@ -55,9 +49,6 @@ jobs:
   Upload:
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3 
-
       - name: Slack Upload Trivy
         if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
         uses: MeilCli/slack-upload-file@v4
