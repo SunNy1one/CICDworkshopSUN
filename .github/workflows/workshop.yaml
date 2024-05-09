@@ -73,20 +73,15 @@ jobs:
       - id: docker_meta
         uses: docker/metadata-action@v4.4.0
         with:
-          images: ghcr.io/sigstore/sample-honk
-          tags: sun1ny/sun1nyworkshop:${{ github.sha }}
+          images: sun1ny/sun1nyworkshop
+          tags: |
+            type=sha
 
       - name: Sign image with a key
         if: success() && steps.search_file.outputs.Trivy_Status == 'Success'
         run: |
-          images=""
-          for tag in ${TAGS}; do
-            images+="${tag}@${DIGEST} "
-          done
-          cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${images}
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${{ steps.docker_meta.outputs.tags }}@${{ steps.docker_build.outputs.digest }}
         env:
-          TAGS: sun1ny/sun1nyworkshop:${{ github.sha }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
 
