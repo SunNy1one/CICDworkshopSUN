@@ -61,6 +61,6 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-          docker build -t fred/go-fortune:${{ github.sha }} ./src
-          docker push fred/go-fortune:${{ github.sha }}
+          docker build -t sun1ny/go-fortune:${{ github.sha }} ./src
+          docker push sun1ny/go-fortune:${{ github.sha }}
 
