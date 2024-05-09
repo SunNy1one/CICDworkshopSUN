@@ -41,7 +41,7 @@ jobs:
           SLACK_TITLE: 'Scan failed - Sun Jiahao'
           SLACK_MESSAGE: 'failed trivy scan, see uploaded report'
           SLACK_COLOR: 'failure'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_TEST_URL }}  
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}  
 
       - name: Slack Upload Trivy
         if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
