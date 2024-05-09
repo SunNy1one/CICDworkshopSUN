@@ -112,7 +112,7 @@ jobs:
             **Metriculation**: A0291826W \n
             **Email**: [e1335038@u.nus.edu](e1335038@u.nus.edu) \n
             **Git**: ${{ github.server_url }}/${{ github.repository }} \n
-            **Image**: [https://hub.docker.com/repository/docker/sun1ny/sun1nyworkshop/general](https://hub.docker.com/repository/docker/sun1ny/sun1nyworkshop/general)'
+            **Image**: https://hub.docker.com/repository/docker/sun1ny/sun1nyworkshop/general'
           SLACK_COLOR: 'success'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
