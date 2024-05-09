@@ -70,10 +70,16 @@ jobs:
         with:
           cosign-release: 'v1.13.1'
 
-      - name: Sign Docker Image
+      - name: Sign image with a key
+        run: |
+          images=""
+          for tag in ${TAGS}; do
+            images+="${tag}@${DIGEST} "
+          done
+          cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${images}
         env:
+          TAGS: sun1ny/sun1nyworkshop${{ steps.docker_meta.outputs.tags }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-        run: |
-          cosign sign -key env://COSIGN_PRIVATE_KEY sun1ny/sun1nyworkshop:${{ github.sha }}
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}
 
