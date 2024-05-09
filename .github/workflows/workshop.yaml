@@ -106,7 +106,6 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_TITLE: 'Image build and signed'
-          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
           SLACK_MESSAGE: 
             '**Name**: Sun Jiahao \n
             **Metriculation**: A0291826W \n
