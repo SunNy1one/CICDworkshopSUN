@@ -54,6 +54,8 @@ jobs:
           initial_comment: 'Scan report by Sun Jiahao.'
       
       
+      
+      
       - name: Build and Push Docker Image
         if: success() && steps.search_file.outputs.Trivy_Status == 'Success'
         env:
@@ -68,6 +70,12 @@ jobs:
       - name: Install Cosign
         uses: sigstore/cosign-installer@v2.1.0
 
+      - id: docker_meta
+        uses: docker/metadata-action@v4.4.0
+        with:
+          images: ghcr.io/sigstore/sample-honk
+          tags: sun1ny/sun1nyworkshop:${{ github.sha }}
+
       - name: Sign image with a key
         if: success() && steps.search_file.outputs.Trivy_Status == 'Success'
         run: |
@@ -77,7 +85,7 @@ jobs:
           done
           cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${images}
         env:
-          TAGS: sun1ny/sun1nyworkshop${{ steps.docker_meta.outputs.tags }}
+          TAGS: sun1ny/sun1nyworkshop:${{ github.sha }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
