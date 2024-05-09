@@ -40,7 +40,7 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: '法法法'
+          SLACK_MESSAGE: 'ffffff'
   
   post:
     runs-on: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: trivy-scan-results
-          
+
       - name: Upload scan results to Slack
         uses: MeilCli/slack-upload-file@v4
         with:
