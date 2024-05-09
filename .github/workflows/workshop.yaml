@@ -24,18 +24,18 @@ jobs:
           severity: 'HIGH'
           output: trivy.txt
 
-      - name: Find CRITICAL in Trivy
+      - name: Find trivytxt
         id: search_file
         run: |
-          if grep -q "CRITICAL" trivy.txt; then
-            echo "::set-output name=Trivy_Status::Success"
-          else
+          if grep -q "HIGH" trivy.txt; then
             echo "::set-output name=Trivy_Status::Failed"
+          else
+            echo "::set-output name=Trivy_Status::Success"
           fi
      
 
       - name: Slack Notification When trivy failure
-        if: failure() && steps.search_file.outputs.Trivy_Status == 'Failed'
+        if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_TITLE: 'Scan failed - Sun Jiahao'
@@ -45,7 +45,7 @@ jobs:
 
 
       - name: Upload Failure txt
-        if: failure() && steps.search_file.outputs.Trivy_Status == 'Failed'
+        if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
         uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
