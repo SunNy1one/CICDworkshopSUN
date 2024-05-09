@@ -21,10 +21,10 @@ jobs:
           format: 'table'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL'
+          severity: 'HIGH'
           output: trivy.txt
 
-      - name: Find High in Trivy
+      - name: Find CRITICAL in Trivy
         id: search_file
         run: |
           if grep -q "CRITICAL" trivy.txt; then
