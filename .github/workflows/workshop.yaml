@@ -19,7 +19,8 @@ jobs:
         format: 'table'
         ignore-unfixed: ture
         vuln-type: 'os-library'
-        severity: 'HIGH'
+        severity: 'CRITICAL'
+        trivy-config: trivy.yaml
         output: trivy.txt
   Send:
     runs-on: ubuntu-20.04
