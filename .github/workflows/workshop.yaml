@@ -23,10 +23,7 @@ jobs:
           vuln-type: 'os,library'
           severity: 'HIGH'
           output: trivy.txt
-  Findtxt:
-    needs: Scan
-    runs-on: ubuntu-20.04
-    steps:
+
       - name: Find High in Trivy
         id: search_file
         run: |
@@ -36,10 +33,7 @@ jobs:
             echo "::set-output name=Trivy_Status::Success"
           fi
      
-  SendFMsg:
-    needs: Findtxt
-    runs-on: ubuntu-20.04
-    steps:
+
       - name: Slack Notification When trivy failure
         if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
         uses: rtCamp/action-slack-notify@v2
@@ -49,10 +43,7 @@ jobs:
           SLACK_COLOR: 'failure'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}  
 
-  Sendtxt:
-    needs: SendFMsg
-    runs-on: ubuntu-20.04
-    steps:
+
       - name: Slack Upload Trivy
         if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
         uses: MeilCli/slack-upload-file@v4
