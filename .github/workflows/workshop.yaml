@@ -55,7 +55,17 @@ jobs:
       - name: Upload scan results to Slack
         uses: slackapi/slack-github-action@v1.23.0
         with:
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           slack-bot-user-oauth-access-token: ${{ secrets.SLACK_BOT_TOKEN }}
-          slack-channel: ${{ secrets.SLACK_CHANNEL_ID }}
-          slack-text: "Scan results:"
-          slack-file: ./trivy.txt
+          payload: |
+            {
+              "text": "Scan results:",
+              "attachments": [
+                {
+                  "fallback": "Scan results file",
+                  "text": "Scan results file",
+                  "filename": "trivy.txt",
+                  "file": "./trivy.txt"
+                }
+              ]
+            }
