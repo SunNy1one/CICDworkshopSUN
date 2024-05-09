@@ -52,4 +52,14 @@ jobs:
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'trivy.txt'
           initial_comment: 'Scan report by Sun Jiahao.'
+      
+      - name: Build and Push Docker Image
+        if: success() && steps.search_file.outputs.Trivy_Status == 'Success'
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+          docker build -t fred/go-fortune:${{ github.sha }} .
+          docker push fred/go-fortune:${{ github.sha }}
 
