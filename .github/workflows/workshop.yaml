@@ -34,7 +34,7 @@ jobs:
           fi
      
 
-      - name: Slack Notification When trivy failure
+      - name: trivy failure send slack
         if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
         uses: rtCamp/action-slack-notify@v2
         env:
@@ -100,6 +100,23 @@ jobs:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
+      
+      - name: trivy success send slack
+        if: success() && steps.search_file.outputs.Trivy_Status == 'Success'
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: 'Image build and signed'
+          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
+          SLACK_MESSAGE: 
+            '**Name**: Sun Jiahao \n
+            **Metriculation**: A0291826W \n
+            **Email**: [e1335038@u.nus.edu](e1335038@u.nus.edu) \n
+            **Git**: ${{ github.server_url }}/${{ github.repository }} \n
+            **Image**: [https://hub.docker.com/repository/docker/sun1ny/sun1nyworkshop/general](https://hub.docker.com/repository/docker/sun1ny/sun1nyworkshop/general)'
+          SLACK_COLOR: 'success'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+      
       
       
       # - name: Build and Push Docker Image
