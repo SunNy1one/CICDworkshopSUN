@@ -28,9 +28,9 @@ jobs:
         id: search_file
         run: |
           if grep -q "HIGH" trivy.txt; then
-            echo "::set-output name=Trivy_Status::Failed"
+            echo "Trivy_Status=Failed">> $GITHUB_STATE
           else
-            echo "::set-output name=Trivy_Status::Success"
+            echo "Trivy_Status=Success">> $GITHUB_OUTPUT
           fi
      
       # notification to slack
