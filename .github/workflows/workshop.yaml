@@ -21,16 +21,16 @@ jobs:
           format: 'table'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL'
+          severity: 'HIGH'
           output: trivy.txt
 
-      - name: if else condition
+      - name: Find High in Trivy
         id: search_file
         run: |
-          if grep -q "CRITICAL" trivy.txt; then
-            echo "::set-output name=Trivy_Status::Success"
-          else
+          if grep -q "HIGH" trivy.txt; then
             echo "::set-output name=Trivy_Status::Failed"
+          else
+            echo "::set-output name=Trivy_Status::Success"
           fi
      
 
@@ -52,6 +52,4 @@ jobs:
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
           file_path: 'trivy.txt'
           initial_comment: 'Scan report by Sun Jiahao'
-      
- 
 
