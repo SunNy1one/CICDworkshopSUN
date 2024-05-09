@@ -64,3 +64,21 @@ jobs:
           docker build -t sun1ny/sun1nyworkshop:${{ github.sha }} .
           docker push sun1ny/sun1nyworkshop:${{ github.sha }}
 
+      - name: Sign Docker Image
+        env:
+        DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE: ${{ secrets.DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE }}
+        run: |
+        export DOCKER_CONTENT_TRUST=1
+        docker trust sign sun1ny/sun1nyworkshop:${{ github.sha }}
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v2.8.1
+        with:
+          cosign-release: 'v1.13.1'
+
+      - name: Sign Docker Image
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: |
+          cosign sign -key env://COSIGN_PRIVATE_KEY sun1ny/sun1nyworkshop:${{ github.sha }}
+
