@@ -39,7 +39,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_TITLE: 'Scan failed - Sun Jiahao'
-          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
+          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report.'
           SLACK_COLOR: 'failure'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}  
 
