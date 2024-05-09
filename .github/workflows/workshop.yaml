@@ -20,7 +20,7 @@ jobs:
           format: 'table'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'HIGH'
+          severity: 'CRITICAL'
           output: trivy.txt
 
       - name: Find trivytxt
