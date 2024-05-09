@@ -42,8 +42,7 @@ jobs:
         SLACK_MESSAGE: '法法法'
   post:
     runs-on: ubuntu-latest
-    needs: Scan
-    needs: Upload
+    needs: [Scan,Upload]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
