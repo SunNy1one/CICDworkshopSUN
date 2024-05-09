@@ -22,11 +22,14 @@ jobs:
         severity: 'CRITICAL'
         trivy-config: trivy.yaml
         output: trivy.txt
-    - name: Upload scan results
-      uses: actions/upload-artifact@v3
-      with:
-        name: trivy-scan-results
-        path: trivy.txt
+    Upload:
+      runs-on: ubuntu-20.04
+      steps:
+      - name: Upload scan results
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-scan-results
+          path: trivy.txt
   Send:
     runs-on: ubuntu-20.04
     steps:
