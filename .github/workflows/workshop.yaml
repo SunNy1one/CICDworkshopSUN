@@ -8,50 +8,6 @@ on:
       - 'releases/v[0-9]+.[0-9]+'
 
 jobs:
-  Scan:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      
-      - name: Run Trivy vulnerability scanner in fs mode
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          format: 'table'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'HIGH'
-          output: trivy.txt
-
-      - name: Find High in Trivy
-        id: search_file
-        run: |
-          if grep -q "HIGH" trivy.txt; then
-            echo "::set-output name=Trivy_Status::Failed"
-          else
-            echo "::set-output name=Trivy_Status::Success"
-          fi
-     
-
-      - name: Slack Notification When trivy failure
-        if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_TITLE: 'Scan failed - Sun Jiahao'
-          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
-          SLACK_COLOR: 'failure'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}  
-
-
-      - name: Slack Upload Trivy
-        if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
-        uses: MeilCli/slack-upload-file@v4
-        with:
-          slack_token: ${{ secrets.SLACK_TOKEN }}
-          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: 'trivy.txt'
-          initial_comment: 'Scan report by Sun Jiahao'
   # Scan:
   #   runs-on: ubuntu-20.04
   #   steps:
@@ -68,21 +24,16 @@ jobs:
   #         severity: 'HIGH'
   #         output: trivy.txt
 
-  #     - name: Slack Notification
-  #       uses: rtCamp/action-slack-notify@v2
-  #       env:
-  #         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-  #         SLACK_MESSAGE: 'ffffffk'
-  
   #     - name: Find High in Trivy
   #       id: search_file
   #       run: |
-  #           if grep -q "HIGH" trivy.txt; then
-  #             echo "Trivy_Status=Failed">> $GITHUB_STATE
-  #           else
-  #             echo "Trivy_Status=Success">> $GITHUB_OUTPUT
-  #           fi
-      
+  #         if grep -q "HIGH" trivy.txt; then
+  #           echo "::set-output name=Trivy_Status::Failed"
+  #         else
+  #           echo "::set-output name=Trivy_Status::Success"
+  #         fi
+     
+
   #     - name: Slack Notification When trivy failure
   #       if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
   #       uses: rtCamp/action-slack-notify@v2
@@ -90,4 +41,93 @@ jobs:
   #         SLACK_TITLE: 'Scan failed - Sun Jiahao'
   #         SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
   #         SLACK_COLOR: 'failure'
-  #         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  #         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}  
+
+
+  #     - name: Upload Failure txt
+  #       if: success() && steps.search_file.outputs.Trivy_Status == 'Failed'
+  #       uses: MeilCli/slack-upload-file@v4
+  #       with:
+  #         slack_token: ${{ secrets.SLACK_TOKEN }}
+  #         channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+  #         file_path: 'trivy.txt'
+  #         initial_comment: 'Scan report by Sun Jiahao'
+      
+  #     -name: 
+  name: CICD-workshop-actions
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'releases/v[0-9]+.[0-9]+'
+
+jobs:
+
+  Scan:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'table'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'HIGH'
+          output: trivy.txt
+      
+      - name: Find High in Trivy
+        id: search_file
+        run: |
+          if grep -q "HIGH" trivy.txt; then
+            echo "::set-output name=Trivy_Status::Failed"
+          else
+            echo "::set-output name=Trivy_Status::Success"
+          fi
+      
+      - name: Upload Trivy scan results
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-scan-results
+          path: trivy.txt
+
+  Notify:
+    runs-on: ubuntu-20.04
+    needs: Scan
+    if: success() && needs.Scan.outputs.Trivy_Status == 'Failed'
+    steps:
+      - name: Download Trivy scan results
+        uses: actions/download-artifact@v3
+        with:
+          name: trivy-scan-results
+      
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_TITLE: 'Scan failed - Sun Jiahao'
+          SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
+          SLACK_COLOR: 'failure'
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+  Upload:
+    runs-on: ubuntu-20.04
+    needs: Scan
+    if: success() && needs.Scan.outputs.Trivy_Status == 'Failed'
+    steps:
+      - name: Download Trivy scan results
+        uses: actions/download-artifact@v3
+        with:
+          name: trivy-scan-results
+      
+      - name: Upload Failure txt to Slack
+        uses: MeilCli/slack-upload-file@v4
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+          file_path: 'trivy.txt'
+          initial_comment: 'Scan report by Sun Jiahao'
